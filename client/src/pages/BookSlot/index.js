@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+
+import { initializeslot } from '../../Redux/actions/bookslot';
 import Logo from '../../components/Logo';
 import Slot from '../../components/TimeSlot';
+import PulseLoading from '../../components/PulseLoading';
 
 import { Images, Timing } from './util';
 import styled from 'styled-components';
@@ -73,7 +77,7 @@ const TimeSlotWrapper = styled.div`
   flex-wrap: wrap;
   /* background: #333; */
 `
-const BookSlot = styled.div`
+const BookSlot = styled.button`
   width: 60%;
   height: 3.5rem;
   margin: 2rem auto;
@@ -84,14 +88,110 @@ const BookSlot = styled.div`
   border-radius: 4rem;
   font-size: 1.8rem;
   color: #fff;
+  border: none;
+  cursor: pointer;
 `
+const SlotBooked = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position:absolute;
+  top: 0;
+  left:0;
+  z-index: 33;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, .7);
+  .slotBookInfo{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30rem;
+    height: 10rem;
+    background: #fff;
+    border-radius: 1rem;
+    font-size: 2rem;
+    color:  #11A466;
+  }
+  .errorSlot{
+    position: relative;
+    width: 30rem;
+    height: 10rem;
+    background: #fff;
+    border-radius: 1.5rem;
+    font-size: 2rem;
+    color:  #EF5817;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+`
+const Close = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  color: red;
+`
+
 function Index(props) {
-  const { id } = useParams();
+  const [tostOpen, setToast] = useState(false);
+  const slotpicked = useSelector(state => state.currentSlotReducer.slotpicked);
+  const bookslot = useSelector(state => state.bookslotReducer);
+  const dispatch = useDispatch();
+  const [slotdata, setSlotData] = useState("");
+  const { id, book } = useParams();
   const today = moment().format("MMM Do YYYY");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(slotpicked.time)
+    setSlotData({
+      time: slotpicked.time,
+      event: book
+    })
+    setToast(!tostOpen);
+  }
+
+  useEffect(() => {
+    if (slotdata) dispatch(initializeslot(slotdata));
+  }, [slotdata])
+
+  const handleModal = () => {
+    setToast(!tostOpen);
+  }
+
+  console.log(bookslot.slotBooked)
+  console.log(bookslot.error)
 
   return (
     <BookslotContainer>
+      {
+        (bookslot.bookingSuccess === true && tostOpen === true) &&
+        <SlotBooked>
+          <div className="slotBookInfo">
+            <Close onClick={handleModal}>
+              X
+            </Close>
+            You slot has been booked. !!
+          </div>
+        </SlotBooked>
+      }
+      {(bookslot.error !== null && tostOpen === true) &&
+        <SlotBooked>
+          {
+            <div className="errorSlot">
+              <Close onClick={handleModal}>
+                X
+              </Close>
+              {bookslot.error}
+            </div>
+          }
+        </SlotBooked>
+      }
       <Header>
         <Logo />
       </Header>
@@ -104,19 +204,27 @@ function Index(props) {
         </MainImage>
         <TimeSlotContainer>
           <Today>{today}</Today>
-          <TimeSlotWrapper>
-            {
-              Timing.map(time => (
-                <Slot
-                  day={today}
-                  time={time}
+          <form onSubmit={handleSubmit}>
+            <TimeSlotWrapper>
+              {
+                Timing.map(time => (
+                  <Slot
+                    day={today}
+                    time={time}
 
-                />
-              )
-              )
-            }
-          </TimeSlotWrapper>
-          <BookSlot>Book Your Slot</BookSlot>
+                  />
+                )
+                )
+              }
+            </TimeSlotWrapper>
+            <BookSlot type='submit' >
+              {
+                bookslot.initialize ? <PulseLoading /> :
+                  'Book Your Slot'
+              }
+            </BookSlot>
+          </form>
+
         </TimeSlotContainer>
       </Section>
 

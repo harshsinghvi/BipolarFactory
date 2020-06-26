@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import {useDispatch} from 'react-redux';
+import {pickSlot} from '../../Redux/actions/currentSlot';
 import styled from 'styled-components';
 
 const InputSlot = styled.input`
@@ -23,13 +25,16 @@ const SlotTime = styled.span`
 `
 
 function Index({ time, day }) {
+  const dispatch = useDispatch();
   const [selectedSlot, setSolt] = useState("");
   const handleChange = (e)=>{
      setSolt({
-       day,
        time: e.target.value
      });
   }
+  useEffect(()=>{
+    if(selectedSlot) dispatch(pickSlot(selectedSlot));
+  }, [selectedSlot])
   return (
     <SlotWrapper
     >

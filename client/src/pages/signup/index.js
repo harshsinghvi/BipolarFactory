@@ -1,8 +1,10 @@
-import React from 'react'
-
+import React, { useState, useLayoutEffect } from 'react'
+import { Redirect, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-
-import BackButton from '../../components/BackButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { signin } from '../../Redux/actions/user';
+import PulseLoading from '../../components/PulseLoading';
+import BackButton from '../../components/Logout';
 import Logo from '../../components/Logo';
 
 
@@ -85,65 +87,124 @@ const FlexInput = styled.div`
 `
 
 
-function Index() {
+function Index({history}) {
+
+  const dispatch = useDispatch();
+  const userState = useSelector(state => state.userReducer);
+
+  const [userdata, setUserdata] = useState(null);
+  const [firstname, setFirstname] = useState("Rahul");
+  const [lastname, setLastname] = useState("Raj");
+  const [securitycode, setSecuritycode] = useState("Rahul");
+  const [email, setEmail] = useState("rahulraz1308@gmail.com");
+  const [password, setPassword] = useState("12345678");
+  const [passwordConfirm, setPasswordConfirm] = useState("12345678");
+
+  const handleChangeInput = (e) => {
+    if (e.target.name === 'firstname') setFirstname(e.target.value);
+    if (e.target.name === 'lastname') setLastname(e.target.value);
+    if (e.target.name === 'email') setEmail(e.target.value);
+    if (e.target.name === 'password') setPassword(e.target.value);
+    if (e.target.name === 'passwordConfirm') setPasswordConfirm(e.target.value);
+    if (e.target.name === 'securitycode') setPasswordConfirm(e.target.value);
+
+  }
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    setUserdata({
+      name: `${firstname} ${lastname}`,
+      securitycode,
+      email,
+      password,
+      passwordConfirm
+    })
+  }
+
+  useLayoutEffect(() => {
+    if (userdata) dispatch(signin(userdata));
+  }, [userdata])
+
   return (
     <SignupContaier>
       <Header>
         <Logo />
-        <BackButton />
       </Header>
       <SignupWrapper>
         <SignupText>Sign Up</SignupText>
-        <Form>
+        <Form onSubmit={onSubmitHandler}>
           <FlexInput>
             <InputBox width="48%">
               <span className="label">First Name</span>
               <Input
                 name="firstname"
                 type="text"
+                value={firstname}
+                onChange={handleChangeInput}
+                required
               />
             </InputBox>
-            <InputBox  width="48%">
+            <InputBox width="48%">
               <span className="label">Last Name</span>
               <Input
                 name="lastname"
                 type="text"
+                value={lastname}
+                onChange={handleChangeInput}
               />
             </InputBox>
           </FlexInput>
-          <InputBox  width="100%">
+          <InputBox width="100%">
             <span className="label"> Security Code</span>
-            <Input 
+            <Input
               name="securitycode"
               type="text"
+              value={securitycode}
+              onChange={handleChangeInput}
+              required
             />
           </InputBox>
-           <InputBox  width="100%">
+          <InputBox width="100%">
             <span className="label">Email</span>
-            <Input 
+            <Input
               name="email"
               type="email"
+              value={email}
+              onChange={handleChangeInput}
+              required
+
             />
           </InputBox>
-           <InputBox  width="100%">
+          <InputBox width="100%">
             <span className="label"> Password</span>
-            <Input 
+            <Input
               name="password"
               type="password"
+              value={password}
+              onChange={handleChangeInput}
+              required
             />
           </InputBox>
-           <InputBox  width="100%">
+          <InputBox width="100%">
             <span className="label">Confirm Password</span>
-            <Input 
-              name="confirmpassword"
+            <Input
+              name="passwordConfirm"
               type="password"
+              value={passwordConfirm}
+              onChange={handleChangeInput}
+              required
             />
           </InputBox>
-          <SubmitButton type="submit">Submit</SubmitButton>
+          <SubmitButton type="submit">
+            {userState.signIn ? <PulseLoading /> : "Signup"}
+          </SubmitButton>
+          {
+            userState.userActive !== null && <Redirect to={history.push('/facilities')} />
+          }
         </Form>
       </SignupWrapper>
     </SignupContaier>
   )
 }
 
-export default Index
+export default withRouter(Index)

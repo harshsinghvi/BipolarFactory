@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
-
-import BackButton from '../../components/BackButton';
+import {useSelector, useDispatch} from 'react-redux';
 import Logo from '../../components/Logo';
+import PulseLoading from '../../components/PulseLoading';
+import {login} from '../../Redux/actions/user';
 
 
 const LoginContaier = styled.div`
@@ -87,21 +88,46 @@ const SubmitButton = styled.button`
   font-size: 1.8rem;
 `
 function Index() {
+  const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.userReducer);
+
+  const [logindata, setLogindata] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleChange = (e) => {
+    if (e.target.name === 'email') setEmail(e.target.value);
+    if (e.target.name === 'password') setPassword(e.target.value);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLogindata({
+      email,
+      password
+    });
+  }
+
+  useEffect(() => {
+    if (logindata) dispatch(login(logindata));
+  }, [logindata]);
+
   return (
     <LoginContaier>
       <Header>
         <Logo />
-        <BackButton />
       </Header>
       <InputWrapper>
         <WelcomeBack>Welcome back !!</WelcomeBack>
         <LoginText>Login</LoginText>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <InputBox>
             <span className="label">Email</span>
             <Input
               name="email"
               type="email"
+              value={email}
+              onChange={handleChange}
               required
             />
           </InputBox>
@@ -110,10 +136,17 @@ function Index() {
             <Input
               name="password"
               type="password"
+              value={password}
+              onChange={handleChange}
               required
             />
           </InputBox>
-          <SubmitButton type="submit">Get In</SubmitButton>
+          <SubmitButton type="submit">
+            {
+              currentUser.login ? <PulseLoading/> :
+              'Get In'
+            }
+          </SubmitButton>
         </Form>
       </InputWrapper>
     </LoginContaier>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import BackButton from '../../components/BackButton';
+import BackButton from '../../components/Logout';
 import Logo from '../../components/Logo';
 import { FacilityData } from './util';
 import { withRouter } from 'react-router-dom';

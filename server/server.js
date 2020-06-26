@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import AuthRouter from './routes/auth';
+import BookSlotRoute from './routes/bookSlot';
+import { bookSlot } from './controller/slotBooking';
 
 require('dotenv').config();
 
@@ -15,11 +17,13 @@ app.use(bodyParser.urlencoded({
 
 
 app.use(AuthRouter);
+app.use(bookSlot);
 
 mongoose.connect(process.env.MONGODBURI, {
   useCreateIndex: true,
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false
 }).then((con, err) => {
   if (con) {
     console.log('Connected to DB')
