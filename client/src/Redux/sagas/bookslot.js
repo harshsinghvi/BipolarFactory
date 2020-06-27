@@ -9,7 +9,7 @@ import {
 
 } from '../actions/bookslot';
 
-const BOOKAPI = "http://localhost:8000/book-slot";
+const BOOKAPI = "https://bipolar-apartment.herokuapp.com/book-slot";
 
 
 const bookSelectedSlot = async (userdata) => {
