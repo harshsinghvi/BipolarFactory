@@ -11,8 +11,8 @@ import {
   loginFailure
 } from '../actions/user';
 
-const SigninAPI = "http://localhost:8000/signup";
-const LoginAPI = "http://localhost:8000/login";
+const SigninAPI = "https://bipolar-apartment.herokuapp.com/signup";
+const LoginAPI = "https://bipolar-apartment.herokuapp.com/login";
 
 const signupUserInfo = async (userdata) => {
   const response = await fetch(SigninAPI, {
