@@ -26,4 +26,4 @@ const slotSchema = new mongoose.Schema({
 
 const SlotBook = mongoose.model('slots', slotSchema);
 
-export default SlotBook;
+module.exports =  SlotBook;

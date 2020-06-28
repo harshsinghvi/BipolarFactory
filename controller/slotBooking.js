@@ -1,6 +1,6 @@
-import moment from 'moment';
+const moment = require('moment');
 
-import SlotBook from '../models/slotBooking';
+const SlotBook = require('../models/slotBooking');
 
 const today = moment().format("MMM Do YYYY");
 

@@ -1,12 +1,25 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import morgan from 'morgan';
-import path from 'path';
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const morgan = require('cors');
+const path = require('path');
 
-import AuthRouter from './routes/auth';
-import BookSlotRoute from './routes/bookSlot';
+const AuthRouter = require('./routes/auth');
+const bookSlotRouter = require('./routes/bookSlot');
+
+
+
+
+// import express from 'express';
+// import bodyParser from 'body-parser';
+// import mongoose from 'mongoose';
+// import cors from 'cors';
+// import morgan from 'morgan';
+// import path from 'path';
+
+// import AuthRouter from './routes/auth';
+// import BookSlotRoute from './routes/bookSlot';
 // import {
 //   bookSlot
 // } from './controller/slotBooking';
@@ -30,7 +43,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.use(AuthRouter);
-app.use(BookSlotRoute);
+app.use(bookSlotRouter);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
