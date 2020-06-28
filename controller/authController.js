@@ -10,7 +10,7 @@ const signToken = id => {
   })
 }
 
-export const signup = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const newUser = await User.create(req.body);
     const token = signToken(newUser._id);
@@ -30,7 +30,7 @@ export const signup = async (req, res) => {
   }
 };
 
-export const login = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const {
       email,
@@ -61,3 +61,5 @@ export const login = async (req, res, next) => {
     });
   }
 };
+
+module.exports = {signup , login}

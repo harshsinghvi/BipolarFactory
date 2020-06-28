@@ -6,7 +6,7 @@ const today = moment().format("MMM Do YYYY");
 
 
 
-export const bookSlot = async (req, res, next) => {
+const bookSlot = async (req, res, next) => {
   const {
     time,
     event
@@ -69,3 +69,5 @@ export const bookSlot = async (req, res, next) => {
 function checkSlot(data, time) {
   return data.includes(time)
 }
+
+module.exports = {bookSlot}
