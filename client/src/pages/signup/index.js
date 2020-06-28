@@ -93,12 +93,12 @@ function Index({history}) {
   const userState = useSelector(state => state.userReducer);
 
   const [userdata, setUserdata] = useState(null);
-  const [firstname, setFirstname] = useState("Rahul");
-  const [lastname, setLastname] = useState("Raj");
-  const [securitycode, setSecuritycode] = useState("Rahul");
-  const [email, setEmail] = useState("rahulraz1308@gmail.com");
-  const [password, setPassword] = useState("12345678");
-  const [passwordConfirm, setPasswordConfirm] = useState("12345678");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [securitycode, setSecuritycode] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const handleChangeInput = (e) => {
     if (e.target.name === 'firstname') setFirstname(e.target.value);
@@ -160,6 +160,7 @@ function Index({history}) {
               name="securitycode"
               type="text"
               value={securitycode}
+              placeholder="Enter any number"
               onChange={handleChangeInput}
               required
             />
@@ -182,6 +183,7 @@ function Index({history}) {
               type="password"
               value={password}
               onChange={handleChangeInput}
+              placeholder="min 8 char"
               required
             />
           </InputBox>
