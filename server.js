@@ -7,9 +7,9 @@ import path from 'path';
 
 import AuthRouter from './routes/auth';
 import BookSlotRoute from './routes/bookSlot';
-import {
-  bookSlot
-} from './controller/slotBooking';
+// import {
+//   bookSlot
+// } from './controller/slotBooking';
 
 require('dotenv').config({
   path: './config.env'
@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 
 
 app.use(AuthRouter);
-app.use(bookSlot);
+app.use(BookSlotRoute);
 
 mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
@@ -46,9 +46,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('../client/build'));
+  app.use(express.static('client/build'));
   app.get("*" , (req,res)=>{
-    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   })
 }
 
